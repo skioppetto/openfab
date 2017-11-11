@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BaseconfigApplication {
+public class Isa95EquipmentsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BaseconfigApplication.class, args);
+		SpringApplication.run(Isa95EquipmentsApplication.class, args);
 	}
 }
