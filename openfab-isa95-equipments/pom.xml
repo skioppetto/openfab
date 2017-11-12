@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.openfab</groupId>
-	<artifactId>openfab-baseconfig</artifactId>
+	<artifactId>openfab-isa95-equipments</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
