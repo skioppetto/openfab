@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Isa95EquipmentsApplicationTests {
+public class Isa95EquipmentsDbTests extends AbstractMongoDBTest{
 
 	@Test
 	public void contextLoads() {
