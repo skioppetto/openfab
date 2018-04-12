@@ -1,10 +1,22 @@
 package com.openfab.isa95.equipments;
 
+import java.util.List;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class Equipment {
+@EqualsAndHashCode(callSuper=true)
+public class Equipment extends AbstractEquipment {
 
-	private String id;
+	/**
+	 * * HierarchyScopeType in B2MML 	
+	 */
+	private String ParentEquipmentID;
+	/**
+	 * * HierarchyScopeType in B2MML 	
+	 */
+	private List<String> ChildrenEquipmentIDs;
+	private List<EquipmentClass> Classes;
 	
 }
