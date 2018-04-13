@@ -1,7 +1,9 @@
-package com.openfab.isa95.equipments;
+package com.openfab.isa95.equipments.unit;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.openfab.isa95.equipments.EquipmentLevelEnum;
 
 public class EquipmentLevelEnumTest {
 

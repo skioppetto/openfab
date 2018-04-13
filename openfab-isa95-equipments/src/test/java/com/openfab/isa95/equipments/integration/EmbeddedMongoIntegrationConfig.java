@@ -1,4 +1,4 @@
-package com.openfab.isa95.equipments;
+package com.openfab.isa95.equipments.integration;
 
 import java.io.IOException;
 
@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import com.mongodb.MongoClient;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
@@ -21,10 +22,10 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 
 @Configuration
-public class EmbeddedMongoJunitConfig {
+public class EmbeddedMongoIntegrationConfig {
 
-	private static final String DB_NAME = "junit";
-	
+	public static final String DB_NAME = "integration_tests";
+
 	/**
 	 * please store Starter or RuntimeConfig in a static final field if you want
 	 * to use artifact store caching (or else disable caching)
@@ -33,15 +34,17 @@ public class EmbeddedMongoJunitConfig {
 			.getDefaultInstance();
 
 	public MongodExecutable _mongodExe;
-	
+
 	private MongoClient _mongo;
 
-	public EmbeddedMongoJunitConfig() throws Exception {
+	private MongodProcess _mongod;
+
+	public EmbeddedMongoIntegrationConfig() throws Exception {
 		_mongodExe = starter.prepare(new MongodConfigBuilder()
 				.version(Version.Main.V3_6)
 				.net(new Net("localhost", 12345, Network.localhostIsIPv6()))
 				.build());
-		_mongodExe.start();
+		_mongod = _mongodExe.start();
 
 		_mongo = new MongoClient("localhost", 12345);
 
@@ -52,6 +55,11 @@ public class EmbeddedMongoJunitConfig {
 		// Lots of calls here to de.flapdoodle.embed.mongo code base to
 		// create an embedded db and insert some JSON data
 		return _mongo;
+	}
+
+	@Bean(name = "mongodProcess")
+	public MongodProcess mongodProcess() {
+		return _mongod;
 	}
 
 	@Autowired

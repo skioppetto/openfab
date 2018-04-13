@@ -1,10 +1,12 @@
-package com.openfab.isa95.equipments;
+package com.openfab.isa95.equipments.unit;
 
 import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.openfab.isa95.equipments.DescriptionTranslations;
 
 public class DescriptionTranslationsTest {
 
