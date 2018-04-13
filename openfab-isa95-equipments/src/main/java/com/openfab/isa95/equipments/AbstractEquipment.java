@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(of = { "ID" })
-public class AbstractEquipment {
+public abstract class AbstractEquipment {
 
 	private String ID;
 	private EquipmentLevelEnum Level;
