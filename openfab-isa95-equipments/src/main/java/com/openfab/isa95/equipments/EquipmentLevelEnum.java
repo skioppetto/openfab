@@ -1,9 +1,9 @@
 package com.openfab.isa95.equipments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
 
 // as defined on B2MML-V0600-Common EquipmentElementLevel1Type
 public enum EquipmentLevelEnum {
@@ -20,7 +20,7 @@ public enum EquipmentLevelEnum {
 	private List<String> parentLevels;
 
 	private EquipmentLevelEnum(String... parents) {
-		parentLevels = Arrays.nonNullElementsIn(parents);
+		parentLevels = Arrays.asList(parents);
 	}
 
 	private EquipmentLevelEnum() {
