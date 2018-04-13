@@ -40,12 +40,15 @@ public class AbstractEquipmentTreeProvider {
 						.equals(node.getParentID()))
 				.forEach(
 						child -> {
+							if (null == root.getChildren())
+								root.setChildren(new ArrayList<AbstractEquipmentTreeNode>());
 							root.getChildren().add(
 									new AbstractEquipmentTreeNode(child));
 							childrenToRemove.add(child);
 						});
 		children.removeAll(childrenToRemove);
-		root.getChildren().forEach(child -> appendChildren(child));
+		if (null != root.getChildren())
+			root.getChildren().forEach(child -> appendChildren(child));
 	}
 
 	public final AbstractEquipment getRoot() {

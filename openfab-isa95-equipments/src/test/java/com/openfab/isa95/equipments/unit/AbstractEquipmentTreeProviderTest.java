@@ -80,14 +80,14 @@ public class AbstractEquipmentTreeProviderTest {
 				.filter(child -> "node3".equals(child.getNode().getID()))
 				.findFirst();
 		Assert.assertTrue(node3.isPresent());
-		Assert.assertTrue(node3.get().getChildren().isEmpty());
+		Assert.assertNull(node3.get().getChildren());
 
 		Optional<AbstractEquipmentTreeNode> node4 = node1.get().getChildren()
 				.stream()
 				.filter(child -> "node4".equals(child.getNode().getID()))
 				.findFirst();
 		Assert.assertTrue(node4.isPresent());
-		Assert.assertTrue(node4.get().getChildren().isEmpty());
+		Assert.assertNull(node4.get().getChildren());
 
 		// node2 children
 		chidldrenIDs.clear();
@@ -107,7 +107,7 @@ public class AbstractEquipmentTreeProviderTest {
 				.filter(child -> "node5".equals(child.getNode().getID()))
 				.findFirst();
 		Assert.assertTrue(node5.isPresent());
-		Assert.assertTrue(node5.get().getChildren().isEmpty());
+		Assert.assertNull(node5.get().getChildren());
 
 	}
 }

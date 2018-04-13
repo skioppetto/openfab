@@ -1,6 +1,5 @@
 package com.openfab.isa95.equipments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -10,7 +9,7 @@ public class AbstractEquipmentTreeNode {
 
 	AbstractEquipment node;
 
-	List<AbstractEquipmentTreeNode> children = new ArrayList<AbstractEquipmentTreeNode>();
+	List<AbstractEquipmentTreeNode> children = null;
 
 	public AbstractEquipmentTreeNode(AbstractEquipment equipment) {
 		super();
