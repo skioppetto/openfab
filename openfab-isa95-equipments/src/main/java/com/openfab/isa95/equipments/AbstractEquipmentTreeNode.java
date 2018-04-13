@@ -8,13 +8,13 @@ import lombok.Data;
 @Data
 public class AbstractEquipmentTreeNode {
 
-	AbstractEquipment equipment;
+	AbstractEquipment node;
 
 	List<AbstractEquipmentTreeNode> children = new ArrayList<AbstractEquipmentTreeNode>();
 
 	public AbstractEquipmentTreeNode(AbstractEquipment equipment) {
 		super();
-		this.equipment = equipment;
+		this.node = equipment;
 	}
 
 }
