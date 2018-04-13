@@ -14,7 +14,7 @@ public class AbstractEquipmentTreeProvider {
 			List<? extends AbstractEquipment> _nodes) {
 		super();
 		this.nodes = _nodes;
-		this.children = new HashSet<AbstractEquipment>(_nodes);
+
 	}
 
 	public static AbstractEquipmentTreeProvider getInstance(
@@ -23,11 +23,12 @@ public class AbstractEquipmentTreeProvider {
 	}
 
 	public AbstractEquipmentTreeNode asTree() {
-
+		this.children = new HashSet<AbstractEquipment>(nodes);
 		AbstractEquipment root = getRoot();
 		AbstractEquipmentTreeNode rootNode = new AbstractEquipmentTreeNode(root);
 		children.remove(root);
 		appendChildren(rootNode);
+		this.children = null;
 		return rootNode;
 
 	}
