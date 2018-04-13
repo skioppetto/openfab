@@ -14,7 +14,6 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import com.mongodb.MongoClient;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
@@ -34,8 +33,7 @@ public class EmbeddedMongoJunitConfig {
 			.getDefaultInstance();
 
 	public MongodExecutable _mongodExe;
-	private MongodProcess _mongod;
-
+	
 	private MongoClient _mongo;
 
 	public EmbeddedMongoJunitConfig() throws Exception {
@@ -43,7 +41,7 @@ public class EmbeddedMongoJunitConfig {
 				.version(Version.Main.V3_6)
 				.net(new Net("localhost", 12345, Network.localhostIsIPv6()))
 				.build());
-		_mongod = _mongodExe.start();
+		_mongodExe.start();
 
 		_mongo = new MongoClient("localhost", 12345);
 
