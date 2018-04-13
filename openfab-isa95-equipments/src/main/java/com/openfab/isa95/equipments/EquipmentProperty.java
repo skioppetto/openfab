@@ -14,7 +14,6 @@ public class EquipmentProperty {
 	private Value Value;
 	private List<Value> Values;	
 	List<EquipmentProperty> Properties;
-	// ISSUE #4: manage multiple languages in Description field
 	// ISSUE #10: manage EquipmentCapabilityTestSpecificationID
 	// ISSUE #11: manage TestResult
 }

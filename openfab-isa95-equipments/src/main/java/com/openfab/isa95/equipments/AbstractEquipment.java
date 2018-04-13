@@ -13,8 +13,10 @@ public class AbstractEquipment {
 	private EquipmentLevelEnum Level;
 	private DescriptionTranslations Descriptions;
 	private List<EquipmentProperty> EquipmentProperties;
-
-	// ISSUE #4: manage multiple languages in Description field
+	/**
+	 * * HierarchyScopeType in B2MML 	
+	 */
+	private String ParentID;
 	// ISSUE #10: add EquipmentCapabilityTestSpecifications
 
 	public AbstractEquipment() {
