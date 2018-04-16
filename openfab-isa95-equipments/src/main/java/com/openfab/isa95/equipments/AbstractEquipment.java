@@ -6,17 +6,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = { "ID" })
+@EqualsAndHashCode(of = { "id" })
 public abstract class AbstractEquipment {
 
-	private String ID;
+	private String id;
 	private EquipmentLevelEnum Level;
-	private DescriptionTranslations Descriptions;
-	private List<EquipmentProperty> EquipmentProperties;
+	private DescriptionTranslations descriptions;
+	private List<EquipmentProperty> equipmentProperties;
 	/**
 	 * * HierarchyScopeType in B2MML 	
 	 */
-	private String ParentID;
+	private String parentID;
 	// ISSUE #10: add EquipmentCapabilityTestSpecifications
 
 	public AbstractEquipment() {

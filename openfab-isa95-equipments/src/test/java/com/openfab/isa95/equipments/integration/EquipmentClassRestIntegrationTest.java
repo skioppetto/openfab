@@ -45,7 +45,7 @@ public class EquipmentClassRestIntegrationTest {
 		descsroot.put("en", "my enterprise description");
 		descsroot.put("it", "la mia descrizione");
 		root.setDescriptions(descsroot);
-		root.setID("root");
+		root.setId("root");
 		root.setLevel(EquipmentLevelEnum.Enterprise);
 
 		// area1 node
@@ -54,7 +54,7 @@ public class EquipmentClassRestIntegrationTest {
 		descsarea.put("en", "my area description");
 		descsarea.put("it", "la mia descrizione area");
 		area1.setDescriptions(descsarea);
-		area1.setID("area1");
+		area1.setId("area1");
 		area1.setLevel(EquipmentLevelEnum.Area);
 		area1.setParentID("root");
 
@@ -64,7 +64,7 @@ public class EquipmentClassRestIntegrationTest {
 		descsarea2.put("en", "my area description");
 		descsarea2.put("it", "la mia descrizione area 2");
 		area2.setDescriptions(descsarea2);
-		area2.setID("area2");
+		area2.setId("area2");
 		area2.setLevel(EquipmentLevelEnum.Area);
 		area2.setParentID("root");
 

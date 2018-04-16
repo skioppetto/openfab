@@ -36,7 +36,7 @@ public class AbstractEquipmentTreeProvider {
 	private void appendChildren(AbstractEquipmentTreeNode root) {
 		List<AbstractEquipment> childrenToRemove = new ArrayList<AbstractEquipment>();
 		children.stream()
-				.filter(node -> root.getNode().getID()
+				.filter(node -> root.getNode().getId()
 						.equals(node.getParentID()))
 				.forEach(
 						child -> {
@@ -53,7 +53,7 @@ public class AbstractEquipmentTreeProvider {
 
 	public final AbstractEquipment getRoot() {
 		List<String> IDs = new ArrayList<String>();
-		nodes.forEach(node -> IDs.add(node.getID()));
+		nodes.forEach(node -> IDs.add(node.getId()));
 		return nodes
 				.stream()
 				.filter(node -> null == node.getParentID()
