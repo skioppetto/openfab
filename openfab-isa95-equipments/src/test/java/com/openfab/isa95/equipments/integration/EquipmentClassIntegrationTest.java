@@ -2,6 +2,7 @@ package com.openfab.isa95.equipments.integration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -72,6 +74,12 @@ public class EquipmentClassIntegrationTest {
 		equipments.add(area1);
 		equipments.add(area2);
 		Mockito.when(repository.findAll()).thenReturn(equipments);
+		Mockito.when(repository.findById(Mockito.eq("root"))).thenReturn(
+				Optional.of(root));
+		Mockito.when(repository.findById(Mockito.eq("area1"))).thenReturn(
+				Optional.of(area1));
+		Mockito.when(repository.findById(Mockito.eq("area2"))).thenReturn(
+				Optional.of(area2));
 	}
 
 	@Test
@@ -79,10 +87,31 @@ public class EquipmentClassIntegrationTest {
 		RequestBuilder getAll = MockMvcRequestBuilders.get("/equipment-class",
 				MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString());
-		Assert.assertEquals(
-				"{\"node\":{\"descriptions\":{\"en\":\"my enterprise description\",\"it\":\"la mia descrizione\"},\"id\":\"root\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"descriptions\":{\"en\":\"my area description\",\"it\":\"la mia descrizione area\"},\"id\":\"area1\",\"level\":\"Area\",\"parentID\":\"root\"},\"children\":[]},{\"node\":{\"descriptions\":{\"en\":\"my area description\",\"it\":\"la mia descrizione area 2\"},\"id\":\"area2\",\"level\":\"Area\",\"parentID\":\"root\"},\"children\":[]}]}",
-				result.getResponse().getContentAsString());
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println(result.getResponse().getContentAsString());
+
+	}
+
+	@Test
+	public void testGetOK() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get(
+				"/equipment-class/root", MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println(result.getResponse().getContentAsString());
+
+	}
+
+	@Test
+	public void testGet404() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get(
+				"/equipment-class/404", MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse());
+		Assert.assertEquals(404, result.getResponse().getStatus());
+		System.out.println(result.getResponse().getContentAsString());
 
 	}
 }
