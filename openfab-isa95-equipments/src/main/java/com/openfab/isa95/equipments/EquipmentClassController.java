@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class EquipmentClassController {
 
 	@Autowired
-	private EquipmentClassRepository repo;
+	private EquipmentClassRepository repoDetailed;
+
+	@Autowired
+	private EquipmentClassSimpleRepository repoSimple;
 
 	@GetMapping("/equipment-class")
 	@ResponseBody
 	public AbstractEquipmentTreeNode getEquipmentClassTree() {
 		List<EquipmentClass> classes = new ArrayList<EquipmentClass>();
-		repo.findAll().forEach(el -> classes.add(el));
+		repoSimple.findAll().forEach(el -> classes.add(el));
 		AbstractEquipmentTreeProvider provider = AbstractEquipmentTreeProvider
 				.getInstance(classes);
 		return provider.asTree();
@@ -32,7 +35,7 @@ public class EquipmentClassController {
 	@ResponseBody
 	public ResponseEntity<EquipmentClass> getEquipmentClass(
 			@PathVariable String id) {
-		return reponseWithHTTPStatus(repo.findById(id));
+		return reponseWithHTTPStatus(repoDetailed.findById(id));
 	}
 
 	private <T> ResponseEntity<T> reponseWithHTTPStatus(Optional<T> entity) {

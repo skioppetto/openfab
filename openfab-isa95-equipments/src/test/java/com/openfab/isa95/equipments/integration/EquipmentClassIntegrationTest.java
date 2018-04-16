@@ -23,6 +23,7 @@ import com.openfab.isa95.equipments.DescriptionTranslations;
 import com.openfab.isa95.equipments.EquipmentClass;
 import com.openfab.isa95.equipments.EquipmentClassController;
 import com.openfab.isa95.equipments.EquipmentClassRepository;
+import com.openfab.isa95.equipments.EquipmentClassSimpleRepository;
 import com.openfab.isa95.equipments.EquipmentLevelEnum;
 import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
 
@@ -35,7 +36,9 @@ public class EquipmentClassIntegrationTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private EquipmentClassRepository repository;
+	private EquipmentClassSimpleRepository simpleRepository;
+	@MockBean
+	private EquipmentClassRepository detailedRepository;
 
 	@Before
 	public void setUp() {
@@ -72,12 +75,12 @@ public class EquipmentClassIntegrationTest {
 		equipments.add(root);
 		equipments.add(area1);
 		equipments.add(area2);
-		Mockito.when(repository.findAll()).thenReturn(equipments);
-		Mockito.when(repository.findById(Mockito.eq("root"))).thenReturn(
+		Mockito.when(simpleRepository.findAll()).thenReturn(equipments);
+		Mockito.when(detailedRepository.findById(Mockito.eq("root"))).thenReturn(
 				Optional.of(root));
-		Mockito.when(repository.findById(Mockito.eq("area1"))).thenReturn(
+		Mockito.when(detailedRepository.findById(Mockito.eq("area1"))).thenReturn(
 				Optional.of(area1));
-		Mockito.when(repository.findById(Mockito.eq("area2"))).thenReturn(
+		Mockito.when(detailedRepository.findById(Mockito.eq("area2"))).thenReturn(
 				Optional.of(area2));
 	}
 
