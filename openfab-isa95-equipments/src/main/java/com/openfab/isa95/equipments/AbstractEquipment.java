@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.data.annotation.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,6 +19,8 @@ public abstract class AbstractEquipment {
 	@Getter(onMethod_ = { @DescriptionLocalized(translationsField = "descriptionTranslations"), @Transient })
 	@Transient
 	private String description;
+	@JsonIgnore
+	@Getter(onMethod_ = {@JsonIgnore})
 	private DescriptionTranslations descriptionTranslations;
 	private List<EquipmentProperty> equipmentProperties;
 	/**
