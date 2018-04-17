@@ -14,7 +14,7 @@ public abstract class AbstractEquipment {
 
 	private String id;
 	private EquipmentLevelEnum Level;
-	@Getter(onMethod = @__(@DescriptionLocalized(translationsField = "descriptionTranslations")))
+	@Getter(onMethod_ = { @DescriptionLocalized(translationsField = "descriptionTranslations"), @Transient })
 	@Transient
 	private String description;
 	private DescriptionTranslations descriptionTranslations;
