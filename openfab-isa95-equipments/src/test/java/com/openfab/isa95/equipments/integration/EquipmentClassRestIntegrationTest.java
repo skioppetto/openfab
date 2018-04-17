@@ -44,7 +44,7 @@ public class EquipmentClassRestIntegrationTest {
 		DescriptionTranslations descsroot = new DescriptionTranslations();
 		descsroot.put("en", "my enterprise description");
 		descsroot.put("it", "la mia descrizione");
-		root.setDescriptions(descsroot);
+		root.setDescriptionTranslations(descsroot);
 		root.setId("root");
 		root.setLevel(EquipmentLevelEnum.Enterprise);
 
@@ -53,7 +53,7 @@ public class EquipmentClassRestIntegrationTest {
 		DescriptionTranslations descsarea = new DescriptionTranslations();
 		descsarea.put("en", "my area description");
 		descsarea.put("it", "la mia descrizione area");
-		area1.setDescriptions(descsarea);
+		area1.setDescriptionTranslations(descsarea);
 		area1.setId("area1");
 		area1.setLevel(EquipmentLevelEnum.Area);
 		area1.setParentID("root");
@@ -63,7 +63,7 @@ public class EquipmentClassRestIntegrationTest {
 		DescriptionTranslations descsarea2 = new DescriptionTranslations();
 		descsarea2.put("en", "my area description");
 		descsarea2.put("it", "la mia descrizione area 2");
-		area2.setDescriptions(descsarea2);
+		area2.setDescriptionTranslations(descsarea2);
 		area2.setId("area2");
 		area2.setLevel(EquipmentLevelEnum.Area);
 		area2.setParentID("root");
