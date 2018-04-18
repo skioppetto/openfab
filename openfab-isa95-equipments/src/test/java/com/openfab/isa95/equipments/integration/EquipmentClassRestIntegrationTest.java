@@ -1,6 +1,8 @@
 package com.openfab.isa95.equipments.integration;
 
+import java.beans.Beans;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,12 +22,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.openfab.isa95.equipments.DataTypeEnum;
 import com.openfab.isa95.equipments.DescriptionTranslations;
 import com.openfab.isa95.equipments.EquipmentClass;
 import com.openfab.isa95.equipments.EquipmentClassController;
 import com.openfab.isa95.equipments.EquipmentClassRepository;
 import com.openfab.isa95.equipments.EquipmentLevelEnum;
+import com.openfab.isa95.equipments.EquipmentProperty;
 import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
+import com.openfab.isa95.equipments.Value;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({ EquipmentClassController.class,
@@ -47,6 +53,21 @@ public class EquipmentClassRestIntegrationTest {
 		root.setDescriptionTranslations(descsroot);
 		root.setId("root");
 		root.setLevel(EquipmentLevelEnum.Enterprise);
+
+		// enterprise node detailed
+		EquipmentClass rootdetailed = new EquipmentClass();
+		DescriptionTranslations descsrootdetailed = new DescriptionTranslations();
+		descsrootdetailed.put("en", "my enterprise description");
+		descsrootdetailed.put("it", "la mia descrizione");
+		rootdetailed.setDescriptionTranslations(descsrootdetailed);
+		rootdetailed.setId("root");
+		rootdetailed.setLevel(EquipmentLevelEnum.Enterprise);		
+		List<EquipmentProperty> propertiesroot = Arrays
+				.asList(new EquipmentProperty("address", "enterprise address",
+						new Value("via gorizia, 12, Napoli", DataTypeEnum.Text)),
+						new EquipmentProperty("name", "enterprise name",
+								new Value("Ablabla s.p.a", DataTypeEnum.Text)));
+		rootdetailed.setEquipmentProperties(propertiesroot);
 
 		// area1 node
 		EquipmentClass area1 = new EquipmentClass();
@@ -74,11 +95,7 @@ public class EquipmentClassRestIntegrationTest {
 		equipments.add(area2);
 		Mockito.when(repo.findSimpleAll()).thenReturn(equipments);
 		Mockito.when(repo.findById(Mockito.eq("root"))).thenReturn(
-				Optional.of(root));
-		Mockito.when(repo.findById(Mockito.eq("area1"))).thenReturn(
-				Optional.of(area1));
-		Mockito.when(repo.findById(Mockito.eq("area2"))).thenReturn(
-				Optional.of(area2));
+				Optional.of(rootdetailed));
 	}
 
 	@Test
@@ -88,20 +105,27 @@ public class EquipmentClassRestIntegrationTest {
 		MvcResult result = mockMvc.perform(getAll).andReturn();
 		Assert.assertNotNull(result.getResponse().getContentAsString(), result
 				.getResponse().getContentAsString());
-		System.out.println(result.getResponse().getContentAsString());
-
+		System.out.println("----- testTree() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "{\"node\":{\"id\":\"root\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"id\":\"area1\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"id\":\"area2\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
 	}
 
 	@Test
-	public void testGetOK() throws Exception {
+	public void testGetDetailedOK() throws Exception {
 		RequestBuilder getAll = MockMvcRequestBuilders.get(
 				"/equipment-class/root", MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(getAll).andReturn();
 		Assert.assertNotNull(result.getResponse().getContentAsString(), result
 				.getResponse().getContentAsString());
-		System.out.println(result.getResponse().getContentAsString());
-
+		System.out.println("----- testGetOK() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "{\"id\":\"root\",\"equipmentProperties\":[{\"key\":\"address\",\"description\":\"enterprise address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
 	}
+
 
 	@Test
 	public void testGet404() throws Exception {

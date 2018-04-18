@@ -1,7 +1,7 @@
 [{
 "_class":"com.openfab.isa95.equipments.EquipmentClass",
 "id":"root",
-"descriptions":
+"descriptionTranslations":
 	{"en":"my enterprise description",
 	 "it":"la mia descrizione"},
 "level":"Enterprise",
@@ -13,7 +13,7 @@
 {
 "_class":"com.openfab.isa95.equipments.EquipmentClass",
 "id":"area1",
-"descriptions":
+"descriptionTranslations":
 	{"en":"my area1 description",
 	 "it":"la mia area1"},
 "level":"Area",
@@ -22,7 +22,7 @@
 {
 "_class":"com.openfab.isa95.equipments.EquipmentClass",
 "id":"area2",
-"descriptions":
+"descriptionTranslations":
 	{"en":"my area2 description",
 	 "it":"la mia area2"},
 "level":"Area",
@@ -31,7 +31,7 @@
 {
 "_class":"com.openfab.isa95.equipments.EquipmentClass",
 "id":"area3",
-"descriptions":
+"descriptionTranslations":
 	{"en":"my area3 description",
 	 "it":"la mia area3"},
 "level":"Area",
