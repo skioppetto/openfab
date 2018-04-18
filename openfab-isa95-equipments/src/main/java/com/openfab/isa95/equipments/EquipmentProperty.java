@@ -9,11 +9,21 @@ public class EquipmentProperty {
 	/**
 	 * optional to manage key/value pairs
 	 * */
-	private String Key; 
-	private String Description;
-	private Value Value;
-	private List<Value> Values;	
-	List<EquipmentProperty> Properties;
+	private String key; 
+	private String description;
+	private Value value;
+	private List<Value> values;	
+	List<EquipmentProperty> properties;
+	
+	public EquipmentProperty(){}
+	
+	public EquipmentProperty(String key, String description, Value value) {
+		super();
+		this.key = key;
+		this.description = description;
+		this.value = value;
+	}
+	
 	// ISSUE #10: manage EquipmentCapabilityTestSpecificationID
 	// ISSUE #11: manage TestResult
 }
