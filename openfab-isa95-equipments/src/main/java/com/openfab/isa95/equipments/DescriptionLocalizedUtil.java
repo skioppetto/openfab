@@ -2,6 +2,7 @@ package com.openfab.isa95.equipments;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.jboss.logging.Logger;
@@ -23,14 +24,14 @@ public class DescriptionLocalizedUtil {
 					&& null != p.getReadMethod().getAnnotation(DescriptionLocalized.class)
 					&& null != p.getReadMethod().getAnnotation(DescriptionLocalized.class).translationsField()
 					&& p.getWriteMethod().getParameterTypes().length == 1
-					&& p.getWriteMethod().getParameterTypes()[0].isAssignableFrom(String.class)) {
+					&& String.class.isAssignableFrom(p.getWriteMethod().getParameterTypes()[0])) {
 				String translationsField = p.getReadMethod().getAnnotation(DescriptionLocalized.class)
 						.translationsField();
 
 				try {
 					for (PropertyDescriptor tp : propertyDescriptors)
 						if (tp.getName().equals(translationsField) && null != tp.getReadMethod()
-								&& tp.getReadMethod().getReturnType().isAssignableFrom(DescriptionTranslations.class)) {
+								&& DescriptionTranslations.class.isAssignableFrom(tp.getReadMethod().getReturnType())) {
 							DescriptionTranslations dt = (DescriptionTranslations) tp.getReadMethod().invoke(object,
 									new Object[] {});
 							p.getWriteMethod().invoke(object,
@@ -40,6 +41,17 @@ public class DescriptionLocalizedUtil {
 				} catch (Exception e) {
 					Logger.getLogger(DescriptionLocalizedUtil.class)
 							.error("cannot set localized text on field " + p.getName(), e);
+				}
+			}
+			// MANAGE COLLECTIONS
+			else if (null != p.getReadMethod() && Collection.class.isAssignableFrom(p.getReadMethod().getReturnType())){
+				try{
+				Collection<? extends Object> collection = (Collection<? extends Object>) p.getReadMethod().invoke(object, new Object[]{});
+				if (null != collection)
+					collection.forEach(el -> setLanguage(el, language));
+				}catch (Exception e){
+					Logger.getLogger(DescriptionLocalizedUtil.class)
+					.error("cannot set localized text on collection " + p.getName(), e);
 				}
 			}
 		}
