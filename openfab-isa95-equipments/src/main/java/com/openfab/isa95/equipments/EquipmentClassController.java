@@ -1,5 +1,6 @@
 package com.openfab.isa95.equipments;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static com.openfab.isa95.equipments.DescriptionLocalizedUtil.setLanguage;
 
@@ -23,7 +27,8 @@ public class EquipmentClassController {
 
 	@GetMapping("/equipment-class")
 	@ResponseBody
-	public AbstractEquipmentTreeNode getEquipmentClassTree(@RequestParam(required=false) String lang) {
+	public AbstractEquipmentTreeNode getEquipmentClassTree(
+			@RequestParam(required = false) String lang) {
 		List<EquipmentClass> classes = new ArrayList<EquipmentClass>();
 		repo.findSimpleAll().forEach(el -> classes.add(setLanguage(el, lang)));
 		AbstractEquipmentTreeProvider provider = AbstractEquipmentTreeProvider
@@ -34,14 +39,72 @@ public class EquipmentClassController {
 	@GetMapping("/equipment-class/{id}")
 	@ResponseBody
 	public ResponseEntity<EquipmentClass> getEquipmentClass(
-			@PathVariable String id,
-			@RequestParam(required=false) String lang) {
+			@PathVariable String id, @RequestParam(required = false) String lang) {
 		return reponseWithHTTPStatus(repo.findById(id), lang);
 	}
 
-	private <T> ResponseEntity<T> reponseWithHTTPStatus(Optional<T> entity, String lang) {
+	@PostMapping("/equipment-class/")
+	public ResponseEntity<EquipmentClass> createEquipmentClass(
+			@RequestBody EquipmentClass clz) {
+		EquipmentClass ec = repo.save(clz);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(ec.getId()).toUri();
+		return ResponseEntity.created(location).build();
+	}
+
+	@PostMapping("/equipment-class/{id}/translations")
+	public ResponseEntity<DescriptionTranslations> createEquipmentClassTranslations(
+			@PathVariable String id,
+			@RequestBody DescriptionTranslations translations) {
+		Optional<EquipmentClass> ec = repo.findById(id);
+		if (!ec.isPresent())
+			return ResponseEntity.notFound().build();
+		ec.get().setDescriptionTranslations(translations);
+		repo.save(ec.get());
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().build()
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
+
+	@PostMapping("/equipment-class/{id}/extended")
+	public ResponseEntity<EquipmentProperty> createEquipmentClassProperties(
+			@PathVariable String id,
+			@RequestBody List<EquipmentProperty> properties) {
+		Optional<EquipmentClass> ec = repo.findById(id);
+		if (!ec.isPresent())
+			return ResponseEntity.notFound().build();
+		ec.get().setExtended(properties);
+		repo.save(ec.get());
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().build()
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
+
+	@PostMapping("/equipment-class/{id}/extended/${key}/translations")
+	public ResponseEntity<DescriptionTranslations> createEquipmentClassPropertyTranslations(
+			@PathVariable String id, @PathVariable String key,
+			@RequestBody DescriptionTranslations translations) {
+		Optional<EquipmentClass> ec = repo.findById(id);
+		QEquipmentClass eqClass = new QEquipmentClass("equipment-class");
+		repo.findAll(eqClass.id.eq(id).)
+		if (!ec.isPresent())
+			return ResponseEntity.notFound().build();
+		Optional<EquipmentProperty> equipmentProperty = ec.get().getExtended()
+				.stream().filter(e -> key.equals(e.getKey())).findFirst();
+		if (!equipmentProperty.isPresent())
+			return ResponseEntity.notFound().build();
+		equipmentProperty.get().setDescriptionTranslations(translations);
+		repo.save(ec.get());
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().build()
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
+
+	private <T> ResponseEntity<T> reponseWithHTTPStatus(Optional<T> entity,
+			String lang) {
 		if (entity.isPresent())
-			return new ResponseEntity<T>(setLanguage(entity.get(), lang), HttpStatus.OK);
+			return new ResponseEntity<T>(setLanguage(entity.get(), lang),
+					HttpStatus.OK);
 		return new ResponseEntity<T>(HttpStatus.NOT_FOUND);
 	}
 
