@@ -38,7 +38,7 @@ public class EquipmentClassRepositoryIntegrationTest {
 		Optional<EquipmentClass> root = allList.stream()
 				.filter(e -> e.getId().equals("root")).findFirst();
 		Assert.assertTrue(root.isPresent());
-		Assert.assertNull(root.get().getEquipmentProperties());
+		Assert.assertNull(root.get().getExtended());
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class EquipmentClassRepositoryIntegrationTest {
 		Optional<EquipmentClass> root = allList.stream()
 				.filter(e -> e.getId().equals("root")).findFirst();
 		Assert.assertTrue(root.isPresent());
-		Assert.assertNotNull(root.get().getEquipmentProperties());
+		Assert.assertNotNull(root.get().getExtended());
 	}
 
 

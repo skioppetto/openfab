@@ -70,7 +70,7 @@ public class EquipmentClassRestIntegrationTest {
 						new Value("via gorizia, 12, Napoli", DataTypeEnum.Text)),
 						new EquipmentProperty("name", "enterprise name",
 								new Value("Ablabla s.p.a", DataTypeEnum.Text)));
-		rootdetailed.setEquipmentProperties(propertiesroot);
+		rootdetailed.setExtended(propertiesroot);
 
 		// area1 node
 		EquipmentClass area1 = new EquipmentClass();
@@ -138,7 +138,7 @@ public class EquipmentClassRestIntegrationTest {
 				.getResponse().getContentAsString());
 		System.out.println("----- testGetOK() result: "
 				+ result.getResponse().getContentAsString());
-		String expected = "{\"id\":\"root\",\"equipmentProperties\":[{\"key\":\"address\",\"description\":\"enterprise address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
+		String expected = "{\"id\":\"root\",\"description\":\"my enterprise description\",\"extended\":[{\"key\":\"address\",\"description\":\"enterprise address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
 		JSONAssert.assertEquals(expected, result.getResponse()
 				.getContentAsString(), false);
 	}
@@ -152,7 +152,7 @@ public class EquipmentClassRestIntegrationTest {
 				.getResponse().getContentAsString());
 		System.out.println("----- testGetOKLanguage() result: "
 				+ result.getResponse().getContentAsString());
-		String expected = "{\"id\":\"root\",\"equipmentProperties\":[{\"key\":\"address\",\"description\":\"indirizzo azienda\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
+		String expected = "{\"id\":\"root\",\"description\":\"la mia descrizione\",\"extended\":[{\"key\":\"address\",\"description\":\"indirizzo azienda\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
 		JSONAssert.assertEquals(expected, result.getResponse()
 				.getContentAsString(), false);
 	}

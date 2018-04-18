@@ -22,7 +22,7 @@ public abstract class AbstractEquipment {
 	@JsonIgnore
 	@Getter(onMethod_ = {@JsonIgnore})
 	private DescriptionTranslations descriptionTranslations;
-	private List<EquipmentProperty> equipmentProperties;
+	private List<EquipmentProperty> extended;
 	/**
 	 * * HierarchyScopeType in B2MML
 	 */
