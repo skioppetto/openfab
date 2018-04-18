@@ -63,4 +63,17 @@ public class DescriptionTranslationsTest {
 				translations.getTranslatedText(Locale.ITALIAN.getLanguage()));
 	}
 
+	@Test
+	public void testTranslationNotPresentText() {
+		translations.put(Locale.ITALIAN.getLanguage(),
+				"this is the italian string");
+		translations.put(Locale.getDefault().getLanguage(),
+				"this is the default string");
+		Assert.assertNotEquals(Locale.getDefault().getLanguage(),
+				Locale.CHINESE.getLanguage());
+		Assert.assertEquals(translations.getDefaultText(),
+				translations.getTranslatedText(Locale.CHINESE.getLanguage()));
+
+	}
+
 }

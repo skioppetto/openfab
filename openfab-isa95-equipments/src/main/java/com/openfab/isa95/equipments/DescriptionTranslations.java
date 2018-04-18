@@ -8,6 +8,12 @@ public class DescriptionTranslations extends HashMap<String, String> {
 
 	private static final long serialVersionUID = 1839442983200520483L;
 
+	public DescriptionTranslations(){}
+	
+	public DescriptionTranslations(String text){
+		put(Locale.getDefault().getLanguage(), text);
+	}
+	
 	public String getDefaultText() {
 		if (!keySet().isEmpty()) {
 			if (1 == keySet().size()) {
@@ -20,7 +26,7 @@ public class DescriptionTranslations extends HashMap<String, String> {
 	}
 
 	public String getTranslatedText(String language) {
-		return get(language);
+		return get(language)!=null?get(language):getDefaultText();
 	}
 
 	public Set<String> getLanguages() {
