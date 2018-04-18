@@ -107,9 +107,23 @@ public class EquipmentClassRestIntegrationTest {
 				.getResponse().getContentAsString());
 		System.out.println("----- testTree() result: "
 				+ result.getResponse().getContentAsString());
-		String expected = "{\"node\":{\"id\":\"root\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"id\":\"area1\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"id\":\"area2\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
+		String expected = "{\"node\":{\"id\":\"root\",\"description\":\"my enterprise description\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"id\":\"area1\",\"description\":\"my area description\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"id\":\"area2\",\"description\":\"my area description\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
 		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), false);
+				.getContentAsString(), true);
+	}
+	
+	@Test
+	public void testTreeLanguage() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get("/equipment-class?lang=it",
+				MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println("----- testTree() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "{\"node\":{\"id\":\"root\",\"description\":\"la mia descrizione\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"id\":\"area1\",\"description\":\"la mia descrizione area\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"id\":\"area2\",\"description\":\"la mia descrizione area 2\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), true);
 	}
 
 	@Test
