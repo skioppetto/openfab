@@ -1,9 +1,9 @@
 package com.openfab.isa95.equipments.integration;
 
-import java.beans.Beans;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -61,9 +61,12 @@ public class EquipmentClassRestIntegrationTest {
 		descsrootdetailed.put("it", "la mia descrizione");
 		rootdetailed.setDescriptionTranslations(descsrootdetailed);
 		rootdetailed.setId("root");
-		rootdetailed.setLevel(EquipmentLevelEnum.Enterprise);		
+		rootdetailed.setLevel(EquipmentLevelEnum.Enterprise);
+		DescriptionTranslations addressTranslations = new DescriptionTranslations();
+		addressTranslations.put(Locale.getDefault().getLanguage(), "enterprise address");
+		addressTranslations.put(Locale.ITALIAN.getLanguage(), "indirizzo azienda");
 		List<EquipmentProperty> propertiesroot = Arrays
-				.asList(new EquipmentProperty("address", "enterprise address",
+				.asList(new EquipmentProperty("address", addressTranslations,
 						new Value("via gorizia, 12, Napoli", DataTypeEnum.Text)),
 						new EquipmentProperty("name", "enterprise name",
 								new Value("Ablabla s.p.a", DataTypeEnum.Text)));
@@ -136,6 +139,20 @@ public class EquipmentClassRestIntegrationTest {
 		System.out.println("----- testGetOK() result: "
 				+ result.getResponse().getContentAsString());
 		String expected = "{\"id\":\"root\",\"equipmentProperties\":[{\"key\":\"address\",\"description\":\"enterprise address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
+	
+	@Test
+	public void testGetDetailedOKLanguage() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get(
+				"/equipment-class/root?lang=it", MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println("----- testGetOKLanguage() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "{\"id\":\"root\",\"equipmentProperties\":[{\"key\":\"address\",\"description\":\"indirizzo azienda\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
 		JSONAssert.assertEquals(expected, result.getResponse()
 				.getContentAsString(), false);
 	}
