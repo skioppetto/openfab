@@ -10,6 +10,21 @@ import com.openfab.isa95.equipments.DescriptionLocalizedUtil;
 public class DescriptionTranslationsUtilTest {
 
 	@Test
+	public void testUtilAReturnValue() {
+		DescriptionTranslationsUtilA a = new DescriptionTranslationsUtilA();
+
+		DescriptionTranslationsUtilA retA = DescriptionLocalizedUtil
+				.setLanguage(a, Locale.ITALIAN.getLanguage());
+		Assert.assertNotNull(retA.getDescription());
+		Assert.assertEquals("italian description", retA.getDescription());
+
+		DescriptionTranslationsUtilA retB = DescriptionLocalizedUtil
+				.setLanguage(a, Locale.GERMAN.getLanguage());
+		Assert.assertNotNull(retB.getDescription());
+		Assert.assertEquals("german description", retB.getDescription());
+	}
+
+	@Test
 	public void testUtilA() {
 		DescriptionTranslationsUtilA a = new DescriptionTranslationsUtilA();
 
@@ -22,6 +37,19 @@ public class DescriptionTranslationsUtilTest {
 		Assert.assertEquals("german description", a.getDescription());
 	}
 
+	@Test
+	public void testUtilANullLanguage() {
+		DescriptionTranslationsUtilA a = new DescriptionTranslationsUtilA();
+
+		DescriptionLocalizedUtil.setLanguage(a, null);
+		String nullDescription = a.getDescription();
+		Assert.assertNotNull(nullDescription);
+		DescriptionLocalizedUtil.setLanguage(a, Locale.getDefault().getLanguage());
+		Assert.assertNotNull(a.getDescription());
+		Assert.assertEquals(a.getDescription(), nullDescription);
+	}
+
+	
 	@Test
 	public void testUtilB() {
 		DescriptionTranslationsUtilB a = new DescriptionTranslationsUtilB();

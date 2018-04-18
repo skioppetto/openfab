@@ -3,20 +3,23 @@ package com.openfab.isa95.equipments;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.jboss.logging.Logger;
 
 public class DescriptionLocalizedUtil {
 
-	public static final void setLanguage(Object object, String language) {
+	public static final <T> T setLanguage(T object, String language) {
 		Class<? extends Object> clz = object.getClass();
 		PropertyDescriptor[] propertyDescriptors = null;
+		final String _language = (null != language)?language:Locale.getDefault().getLanguage();
+		
 		try {
 			propertyDescriptors = Introspector.getBeanInfo(clz, Object.class).getPropertyDescriptors();
 		} catch (Exception e) {
 			Logger.getLogger(DescriptionLocalizedUtil.class).error("cannot beanInfo clazz " + clz.getSimpleName());
-			return;
+			return object;
 		}
 
 		for (PropertyDescriptor p : propertyDescriptors) {
@@ -35,7 +38,7 @@ public class DescriptionLocalizedUtil {
 							DescriptionTranslations dt = (DescriptionTranslations) tp.getReadMethod().invoke(object,
 									new Object[] {});
 							p.getWriteMethod().invoke(object,
-									Optional.of(dt.getTranslatedText(language)).orElse(dt.getDefaultText()));
+									Optional.of(dt.getTranslatedText(_language)).orElse(dt.getDefaultText()));
 							break;
 						}
 				} catch (Exception e) {
@@ -46,16 +49,16 @@ public class DescriptionLocalizedUtil {
 			// MANAGE COLLECTIONS
 			else if (null != p.getReadMethod() && Collection.class.isAssignableFrom(p.getReadMethod().getReturnType())){
 				try{
-				Collection<? extends Object> collection = (Collection<? extends Object>) p.getReadMethod().invoke(object, new Object[]{});
+				Collection collection = (Collection) p.getReadMethod().invoke(object, new Object[]{});
 				if (null != collection)
-					collection.forEach(el -> setLanguage(el, language));
+					collection.forEach(el -> setLanguage(el, _language));
 				}catch (Exception e){
 					Logger.getLogger(DescriptionLocalizedUtil.class)
 					.error("cannot set localized text on collection " + p.getName(), e);
 				}
 			}
 		}
-
+		return object;
 	}
 
 }
