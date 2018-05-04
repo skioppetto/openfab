@@ -43,6 +43,40 @@ public class EquipmentClassController {
 		return reponseWithHTTPStatus(repo.findById(id), lang);
 	}
 
+	@GetMapping("/equipment-class/{id}/translations")
+	@ResponseBody
+	public ResponseEntity<DescriptionTranslations> getEquipmentClassTranslations(
+			@PathVariable String id) {
+		Optional<EquipmentClass> ec = repo.findById(id);
+		if (ec.isPresent())
+			return reponseWithHTTPStatus(
+					Optional.of(ec.get().getDescriptionTranslations()), null);
+		return ResponseEntity.notFound().build();
+	}
+
+	@GetMapping("/equipment-class/{id}/extended/{key}/translations")
+	@ResponseBody
+	public ResponseEntity<DescriptionTranslations> getEquipmentClassPropertyTranslations(
+			@PathVariable String id, @PathVariable String key) {
+		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentProperty> equipmentProperty = ec.get().getExtended()
+				.stream().filter(e -> key.equals(e.getKey())).findFirst();
+		if (!equipmentProperty.isPresent())
+			return ResponseEntity.notFound().build();
+		return reponseWithHTTPStatus(Optional.of(equipmentProperty.get()
+				.getDescriptionTranslations()), null);
+	}
+
+	@GetMapping("/equipment-class/{id}/extended")
+	public ResponseEntity<List<EquipmentProperty>> getEquipmentClassProperties(
+			@PathVariable String id) {
+		Optional<EquipmentClass> ec = repo.findById(id);
+		if (ec.isPresent())
+			return reponseWithHTTPStatus(Optional.of(ec.get().getExtended()),
+					null);
+		return ResponseEntity.notFound().build();
+	}
+
 	@PostMapping("/equipment-class/")
 	public ResponseEntity<EquipmentClass> createEquipmentClass(
 			@RequestBody EquipmentClass clz) {
@@ -67,7 +101,7 @@ public class EquipmentClassController {
 	}
 
 	@PostMapping("/equipment-class/{id}/extended")
-	public ResponseEntity<EquipmentProperty> createEquipmentClassProperties(
+	public ResponseEntity<List<EquipmentProperty>> createEquipmentClassProperties(
 			@PathVariable String id,
 			@RequestBody List<EquipmentProperty> properties) {
 		Optional<EquipmentClass> ec = repo.findById(id);
@@ -80,15 +114,11 @@ public class EquipmentClassController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@PostMapping("/equipment-class/{id}/extended/${key}/translations")
+	@PostMapping("/equipment-class/{id}/extended/{key}/translations")
 	public ResponseEntity<DescriptionTranslations> createEquipmentClassPropertyTranslations(
 			@PathVariable String id, @PathVariable String key,
 			@RequestBody DescriptionTranslations translations) {
 		Optional<EquipmentClass> ec = repo.findById(id);
-		QEquipmentClass eqClass = new QEquipmentClass("equipment-class");
-		repo.findAll(eqClass.id.eq(id).)
-		if (!ec.isPresent())
-			return ResponseEntity.notFound().build();
 		Optional<EquipmentProperty> equipmentProperty = ec.get().getExtended()
 				.stream().filter(e -> key.equals(e.getKey())).findFirst();
 		if (!equipmentProperty.isPresent())

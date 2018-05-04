@@ -156,7 +156,49 @@ public class EquipmentClassRestIntegrationTest {
 		JSONAssert.assertEquals(expected, result.getResponse()
 				.getContentAsString(), false);
 	}
+	
+	@Test
+	public void testGetTranslationsOK() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get(
+				"/equipment-class/root/translations", MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println("----- testGetTranslationsOK() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "{\"en\":\"my enterprise description\",\"it\":\"la mia descrizione\"}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
+	
+	@Test
+	public void testGetEquipmentPropertiesOK() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get(
+				"/equipment-class/root/extended", MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println("----- testGetEquipmentPropertiesOK() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "[{\"key\":\"address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}]";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
 
+	@Test
+	public void testGetPropertyTranslationsOK() throws Exception {
+		RequestBuilder getAll = MockMvcRequestBuilders.get(
+				"/equipment-class/root/extended/address/translations", MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(getAll).andReturn();
+		Assert.assertNotNull(result.getResponse().getContentAsString(), result
+				.getResponse().getContentAsString());
+		System.out.println("----- testGetTranslationsOK() result: "
+				+ result.getResponse().getContentAsString());
+		String expected = "{\"en\":\"enterprise address\",\"it\":\"indirizzo azienda\"}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
+	
 
 	@Test
 	public void testGet404() throws Exception {
