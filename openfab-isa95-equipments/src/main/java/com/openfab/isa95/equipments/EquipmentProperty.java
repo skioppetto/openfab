@@ -17,10 +17,10 @@ public class EquipmentProperty {
 	 * */
 	private String key; 
 	@Transient
-	@Getter(onMethod_ = {@DescriptionLocalized(translationsField="descriptionTranslations"), @Transient})
+	@Getter(onMethod = @_({@DescriptionLocalized(translationsField="descriptionTranslations"), @Transient}))
 	private String description;
 	@JsonIgnore
-	@Getter(onMethod_ = {@JsonIgnore})
+	@Getter(onMethod = @_({@JsonIgnore}))
 	private DescriptionTranslations descriptionTranslations;
 	private Value value;
 	private List<Value> values;	
