@@ -33,7 +33,7 @@ import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
 import com.openfab.isa95.equipments.Value;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({ EquipmentClassController.class, EmbeddedMongoIntegrationConfig.class, Isa95EquipmentsApplication.class })
+@WebMvcTest({ EquipmentClassController.class, Isa95EquipmentsApplication.class })
 public class EquipmentClassRestIntegrationTest {
 
 	@Autowired
@@ -96,7 +96,7 @@ public class EquipmentClassRestIntegrationTest {
 		descprocessCell1.put("en", "my process cell");
 		descprocessCell1.put("it", "la mia cella di processo 1");
 		processCell1.setDescriptionTranslations(descprocessCell1);
-		processCell1.setId("area2");
+		processCell1.setId("processCell1");
 		processCell1.setLevel(EquipmentLevelEnum.ProcessCell);
 		processCell1.setParentID("area2");
 
@@ -110,12 +110,12 @@ public class EquipmentClassRestIntegrationTest {
 	}
 
 	@Test
-	public void testTree() throws Exception {
+	public void testAllEquipmentClasses() throws Exception {
 		RequestBuilder getAll = MockMvcRequestBuilders.get("/equipment-class", MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(getAll).andReturn();
 		Assert.assertNotNull(result.getResponse().getContentAsString(), result.getResponse().getContentAsString());
 		System.out.println("----- testTree() result: " + result.getResponse().getContentAsString());
-		String expected = "{\"node\":{\"id\":\"root\",\"description\":\"my enterprise description\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"id\":\"area1\",\"description\":\"my area description\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"id\":\"area2\",\"description\":\"my area description\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
+		String expected = "[{\"id\":\"root\",\"level\":\"Enterprise\"},{\"id\":\"area1\",\"parentID\":\"root\",\"level\":\"Area\"},{\"id\":\"area2\",\"parentID\":\"root\",\"level\":\"Area\"},{\"id\":\"processCell1\",\"parentID\":\"area2\",\"level\":\"ProcessCell\"}]";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), true);
 	}
 

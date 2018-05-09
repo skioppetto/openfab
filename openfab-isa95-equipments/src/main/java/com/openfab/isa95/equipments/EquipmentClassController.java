@@ -27,13 +27,11 @@ public class EquipmentClassController {
 
 	@GetMapping("/equipment-class")
 	@ResponseBody
-	public AbstractEquipmentTreeNode getEquipmentClassTree(
+	public ResponseEntity<List<EquipmentClass>> getEquipmentClassTree(
 			@RequestParam(required = false) String lang) {
 		List<EquipmentClass> classes = new ArrayList<EquipmentClass>();
-		repo.findSimpleAll().forEach(el -> classes.add(setLanguage(el, lang)));
-		AbstractEquipmentTreeProvider provider = AbstractEquipmentTreeProvider
-				.getInstance(classes);
-		return provider.asTree();
+		repo.findSimpleAll().forEach(el -> classes.add(el));
+		return reponseWithHTTPStatus(Optional.of(classes), lang);
 	}
 
 	@GetMapping("/equipment-class/{id}")
