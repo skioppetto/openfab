@@ -107,25 +107,32 @@ public class EquipmentLevelEnumTest {
 		Assert.assertTrue(EquipmentLevelEnum.StorageUnit.getParents().contains(
 				EquipmentLevelEnum.StorageZone));
 	}
-	
+
 	@Test
 	public void testEquipmentModule() {
 		Assert.assertNotNull(EquipmentLevelEnum.EquipmentModule.getParents());
-		Assert.assertEquals(2, EquipmentLevelEnum.EquipmentModule.getParents().size());
-		Assert.assertTrue(EquipmentLevelEnum.EquipmentModule.getParents().contains(
-				EquipmentLevelEnum.EquipmentModule));
-		Assert.assertTrue(EquipmentLevelEnum.EquipmentModule.getParents().contains(
-				EquipmentLevelEnum.Unit));
+		Assert.assertEquals(2, EquipmentLevelEnum.EquipmentModule.getParents()
+				.size());
+		Assert.assertTrue(EquipmentLevelEnum.EquipmentModule.getParents()
+				.contains(EquipmentLevelEnum.EquipmentModule));
+		Assert.assertTrue(EquipmentLevelEnum.EquipmentModule.getParents()
+				.contains(EquipmentLevelEnum.Unit));
 	}
-	
+
 	@Test
 	public void testControlModule() {
 		Assert.assertNotNull(EquipmentLevelEnum.ControlModule.getParents());
-		Assert.assertEquals(2, EquipmentLevelEnum.ControlModule.getParents().size());
-		Assert.assertTrue(EquipmentLevelEnum.ControlModule.getParents().contains(
-				EquipmentLevelEnum.ControlModule));
-		Assert.assertTrue(EquipmentLevelEnum.ControlModule.getParents().contains(
-				EquipmentLevelEnum.EquipmentModule));
+		Assert.assertEquals(2, EquipmentLevelEnum.ControlModule.getParents()
+				.size());
+		Assert.assertTrue(EquipmentLevelEnum.ControlModule.getParents()
+				.contains(EquipmentLevelEnum.ControlModule));
+		Assert.assertTrue(EquipmentLevelEnum.ControlModule.getParents()
+				.contains(EquipmentLevelEnum.EquipmentModule));
+	}
+
+	@Test
+	public void testIsRoot() {
+		Assert.assertTrue(EquipmentLevelEnum.Enterprise.isRoot());
 	}
 
 }
