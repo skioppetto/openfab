@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +28,9 @@ public class EquipmentClassController {
 
 	@Autowired
 	private EquipmentClassRepository repo;
+
+	@Autowired
+	private EquipmentClassValidator equipmentClassValidator;
 
 	@GetMapping("/equipment-class")
 	@ResponseBody
@@ -77,9 +84,9 @@ public class EquipmentClassController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@PostMapping("/equipment-class/")
+	@PostMapping("/equipment-class")
 	public ResponseEntity<EquipmentClass> createEquipmentClass(
-			@RequestBody EquipmentClass clz) {
+			@Valid @RequestBody EquipmentClass clz) {
 		EquipmentClass ec = repo.save(clz);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(ec.getId()).toUri();
@@ -136,6 +143,11 @@ public class EquipmentClassController {
 			return new ResponseEntity<T>(setLanguage(entity.get(), lang),
 					HttpStatus.OK);
 		return new ResponseEntity<T>(HttpStatus.NOT_FOUND);
+	}
+
+	@InitBinder("equipmentClassValidator")
+	public void setupValidatorBinder(WebDataBinder binder) {
+		binder.addValidators(equipmentClassValidator);
 	}
 
 }
