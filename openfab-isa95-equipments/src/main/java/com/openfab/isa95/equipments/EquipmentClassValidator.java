@@ -43,8 +43,8 @@ public class EquipmentClassValidator implements Validator {
 				if (!parent.isPresent()) {
 					// - parentID should exists equipmentClass
 					errors.rejectValue("parentID", "parentID.not_found");
-				} else if (!parent.get().getLevel().getParents()
-						.contains(ec.getLevel())) {
+				} else if (!ec.getLevel().getParents()
+						.contains(parent.get().getLevel())) {
 					// - parentID should be in possibile level parents
 					errors.rejectValue("parentID", "parentID.wrong");
 				}
