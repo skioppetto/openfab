@@ -10,9 +10,10 @@ public class EquipmentClassRepositoryIntegrationTestConfig {
 	@Bean
 	public Jackson2RepositoryPopulatorFactoryBean repositoryPopulator() {
 
+		ClassLoader classLoader = getClass().getClassLoader();
 		InputStreamResource r = new InputStreamResource(
-				this.getClass().getResourceAsStream(
-						"EquipmentClassRepositoryIntegration.json"));
+				classLoader
+						.getResourceAsStream("EquipmentClassRepositoryIntegration.json"));
 		Jackson2RepositoryPopulatorFactoryBean factory = new Jackson2RepositoryPopulatorFactoryBean();
 		factory.setResources(new Resource[] { r });
 		return factory;
