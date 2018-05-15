@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.mongodb.MongoClient;
 import com.openfab.isa95.equipments.EquipmentClass;
 import com.openfab.isa95.equipments.EquipmentClassRepository;
+import com.openfab.isa95.equipments.EquipmentLevelEnum;
 import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
 
 @RunWith(SpringRunner.class)
@@ -26,15 +27,15 @@ public class EquipmentClassRepositoryIntegrationTest {
 	private MongoClient mongoClient;
 
 	@Autowired
-	private EquipmentClassRepository repo;
-
+	private EquipmentClassRepository repo;	
+	
 	@Test
 	public void readSimple() {
 		Iterable<EquipmentClass> all = repo.findSimpleAll();
 		Assert.assertNotNull(all);
 		List<EquipmentClass> allList = new ArrayList<EquipmentClass>();
 		all.forEach(e -> allList.add(e));
-		Assert.assertEquals(4, allList.size());
+		Assert.assertEquals(5, allList.size());
 		Optional<EquipmentClass> root = allList.stream()
 				.filter(e -> e.getId().equals("root")).findFirst();
 		Assert.assertTrue(root.isPresent());
@@ -47,12 +48,29 @@ public class EquipmentClassRepositoryIntegrationTest {
 		Assert.assertNotNull(all);
 		List<EquipmentClass> allList = new ArrayList<EquipmentClass>();
 		all.forEach(e -> allList.add(e));
-		Assert.assertEquals(4, allList.size());
+		Assert.assertEquals(5, allList.size());
 		Optional<EquipmentClass> root = allList.stream()
 				.filter(e -> e.getId().equals("root")).findFirst();
 		Assert.assertTrue(root.isPresent());
 		Assert.assertNotNull(root.get().getExtended());
 	}
 
-
+	@Test
+	public void testCreateEquipmentClass(){
+		EquipmentClass validProcessCell = new EquipmentClass();
+		validProcessCell = new EquipmentClass();
+		validProcessCell.setDescription("process cell 2");
+		validProcessCell.setId("processCell2");
+		validProcessCell.setParentID("area2");
+		validProcessCell.setLevel(EquipmentLevelEnum.ProcessCell);
+		EquipmentClass saved = repo.save(validProcessCell);
+		Assert.assertNotNull(saved);
+		Iterable<EquipmentClass> all = repo.findAll();
+		Assert.assertNotNull(all);
+		List<EquipmentClass> allList = new ArrayList<EquipmentClass>();
+		all.forEach(e -> allList.add(e));
+		Assert.assertEquals(6, allList.size());
+	}
+	
+	
 }
