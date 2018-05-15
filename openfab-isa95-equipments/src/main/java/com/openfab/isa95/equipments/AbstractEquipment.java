@@ -22,7 +22,7 @@ public abstract class AbstractEquipment {
 	private String id;
 	@NotNull
 	private EquipmentLevelEnum Level;
-	@Getter(onMethod_ = { @DescriptionLocalized(translationsField = "descriptionTranslations"), @Transient })
+	@Getter(onMethod_ =  {@DescriptionLocalized(translationsField = "descriptionTranslations"), @Transient })
 	@Transient
 	@NotNull
 	@NotBlank
