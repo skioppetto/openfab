@@ -145,7 +145,7 @@ public class EquipmentClassController {
 		return new ResponseEntity<T>(HttpStatus.NOT_FOUND);
 	}
 
-	@InitBinder("equipmentClassValidator")
+	@InitBinder
 	public void setupValidatorBinder(WebDataBinder binder) {
 		binder.addValidators(equipmentClassValidator);
 	}
