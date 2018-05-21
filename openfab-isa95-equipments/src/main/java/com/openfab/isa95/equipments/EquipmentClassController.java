@@ -47,14 +47,14 @@ public class EquipmentClassController {
 	@ResponseBody
 	public ResponseEntity<EquipmentClass> getEquipmentClass(
 			@PathVariable String id, @RequestParam(required = false) String lang) {
-		return reponseWithHTTPStatus(repo.findById(id), lang);
+		return reponseWithHTTPStatus(repo.findByName(id), lang);
 	}
 
 	@GetMapping("/equipment-class/{id}/translations")
 	@ResponseBody
 	public ResponseEntity<DescriptionTranslations> getEquipmentClassTranslations(
 			@PathVariable String id) {
-		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentClass> ec = repo.findByName(id);
 		if (ec.isPresent())
 			return reponseWithHTTPStatus(
 					Optional.of(ec.get().getDescriptionTranslations()), null);
@@ -65,7 +65,7 @@ public class EquipmentClassController {
 	@ResponseBody
 	public ResponseEntity<DescriptionTranslations> getEquipmentClassPropertyTranslations(
 			@PathVariable String id, @PathVariable String key) {
-		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentClass> ec = repo.findByName(id);
 		Optional<EquipmentProperty> equipmentProperty = ec.get().getExtended()
 				.stream().filter(e -> key.equals(e.getKey())).findFirst();
 		if (!equipmentProperty.isPresent())
@@ -77,7 +77,7 @@ public class EquipmentClassController {
 	@GetMapping("/equipment-class/{id}/extended")
 	public ResponseEntity<List<EquipmentProperty>> getEquipmentClassProperties(
 			@PathVariable String id) {
-		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentClass> ec = repo.findByName(id);
 		if (ec.isPresent())
 			return reponseWithHTTPStatus(Optional.of(ec.get().getExtended()),
 					null);
@@ -89,7 +89,7 @@ public class EquipmentClassController {
 			@Valid @RequestBody EquipmentClass clz) {
 		EquipmentClass ec = repo.save(clz);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(ec.getId()).toUri();
+				.path("/{id}").buildAndExpand(ec.getName()).toUri();
 		return ResponseEntity.created(location).build();
 	}
 
@@ -97,7 +97,7 @@ public class EquipmentClassController {
 	public ResponseEntity<DescriptionTranslations> createEquipmentClassTranslations(
 			@PathVariable String id,
 			@RequestBody DescriptionTranslations translations) {
-		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentClass> ec = repo.findByName(id);
 		if (!ec.isPresent())
 			return ResponseEntity.notFound().build();
 		ec.get().setDescriptionTranslations(translations);
@@ -111,7 +111,7 @@ public class EquipmentClassController {
 	public ResponseEntity<List<EquipmentProperty>> createEquipmentClassProperties(
 			@PathVariable String id,
 			@RequestBody List<EquipmentProperty> properties) {
-		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentClass> ec = repo.findByName(id);
 		if (!ec.isPresent())
 			return ResponseEntity.notFound().build();
 		ec.get().setExtended(properties);
@@ -125,7 +125,7 @@ public class EquipmentClassController {
 	public ResponseEntity<DescriptionTranslations> createEquipmentClassPropertyTranslations(
 			@PathVariable String id, @PathVariable String key,
 			@RequestBody DescriptionTranslations translations) {
-		Optional<EquipmentClass> ec = repo.findById(id);
+		Optional<EquipmentClass> ec = repo.findByName(id);
 		Optional<EquipmentProperty> equipmentProperty = ec.get().getExtended()
 				.stream().filter(e -> key.equals(e.getKey())).findFirst();
 		if (!equipmentProperty.isPresent())

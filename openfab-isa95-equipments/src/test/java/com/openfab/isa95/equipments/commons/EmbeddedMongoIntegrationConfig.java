@@ -1,4 +1,4 @@
-package com.openfab.isa95.equipments.integration;
+package com.openfab.isa95.equipments.commons;
 
 import java.io.IOException;
 

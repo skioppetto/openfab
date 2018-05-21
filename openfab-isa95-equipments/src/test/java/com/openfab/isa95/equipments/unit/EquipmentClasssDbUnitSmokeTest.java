@@ -1,4 +1,4 @@
-package com.openfab.isa95.equipments.integration;
+package com.openfab.isa95.equipments.unit;
 
 import org.bson.BsonDocument;
 import org.bson.BsonString;
@@ -9,13 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.github.kirilldev.mongomery.MongoDBTester;
 import com.mongodb.MongoClient;
 import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
+import com.openfab.isa95.equipments.commons.EmbeddedMongoIntegrationConfig;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { EmbeddedMongoIntegrationConfig.class,
 		Isa95EquipmentsApplication.class })
-public class Isa95EquipmentsDbTests {
+public class EquipmentClasssDbUnitSmokeTest {
 
 	@Autowired
 	private MongoClient mongoClient;
@@ -25,8 +27,13 @@ public class Isa95EquipmentsDbTests {
 		String version = mongoClient.getDatabase(EmbeddedMongoIntegrationConfig.DB_NAME)
 				.runCommand(new BsonDocument("buildinfo", new BsonString("")))
 				.get("version").toString();
-		Assert.assertEquals("3.6.2", version);
-		
+		Assert.assertEquals("3.6.2", version);	
+	}
+	
+	@Test
+	public void dbFileLoad(){
+		MongoDBTester mongoDBTester = new MongoDBTester(mongoClient.getDB(EmbeddedMongoIntegrationConfig.DB_NAME));
+		mongoDBTester.setDBState("EquipmentClassRepositoryTest.json");		
 	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.openfab.isa95.equipments.CommonsController;
 import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
+import com.openfab.isa95.equipments.commons.EmbeddedMongoIntegrationConfig;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({ CommonsController.class, EmbeddedMongoIntegrationConfig.class,

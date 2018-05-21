@@ -1,4 +1,4 @@
-package com.openfab.isa95.equipments.integration;
+package com.openfab.isa95.equipments.unit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,14 +42,14 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass validRoot = new EquipmentClass();
 		validRoot = new EquipmentClass();
 		validRoot.setDescription("root node");
-		validRoot.setId("root");
+		validRoot.setName("root");
 		validRoot.setParentID(null);
 		validRoot.setLevel(EquipmentLevelEnum.Enterprise);
 		
 		EquipmentClass validSite = new EquipmentClass();
 		validSite = new EquipmentClass();
 		validSite.setDescription("site node");
-		validSite.setId("site");
+		validSite.setName("site");
 		validSite.setParentID("root");
 		validSite.setLevel(EquipmentLevelEnum.Site);
 		
@@ -65,7 +65,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass validRoot = new EquipmentClass();
 		validRoot = new EquipmentClass();
 		validRoot.setDescription("root node");
-		validRoot.setId("root");
+		validRoot.setName("root");
 		validRoot.setParentID(null);
 		validRoot.setLevel(EquipmentLevelEnum.Enterprise);
 		validator.validate(validRoot, errors);
@@ -78,7 +78,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass validRoot = new EquipmentClass();
 		validRoot = new EquipmentClass();
 		validRoot.setDescription("root node");
-		validRoot.setId("root");
+		validRoot.setName("root");
 		validRoot.setParentID("parent");
 		validRoot.setLevel(EquipmentLevelEnum.Enterprise);
 		validator.validate(validRoot, errors);
@@ -92,7 +92,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass invalidRoot = new EquipmentClass();
 		invalidRoot = new EquipmentClass();
 		invalidRoot.setDescription("root node");
-		invalidRoot.setId("root");
+		invalidRoot.setName("root");
 		invalidRoot.setParentID(null);
 		invalidRoot.setLevel(EquipmentLevelEnum.Area);
 		validator.validate(invalidRoot, errors);
@@ -107,7 +107,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass invalidRoot = new EquipmentClass();
 		invalidRoot = new EquipmentClass();
 		invalidRoot.setDescription("root node");
-		invalidRoot.setId("root");
+		invalidRoot.setName("root");
 		invalidRoot.setParentID("  ");
 		invalidRoot.setLevel(EquipmentLevelEnum.Area);
 		validator.validate(invalidRoot, errors);
@@ -122,7 +122,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass invalidNode = new EquipmentClass();
 		invalidNode = new EquipmentClass();
 		invalidNode.setDescription("area node");
-		invalidNode.setId("area");
+		invalidNode.setName("area");
 		invalidNode.setParentID("nodenotExists");
 		invalidNode.setLevel(EquipmentLevelEnum.Area);
 		validator.validate(invalidNode, errors);
@@ -137,7 +137,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass invalidNode = new EquipmentClass();
 		invalidNode = new EquipmentClass();
 		invalidNode.setDescription("area node");
-		invalidNode.setId("area");
+		invalidNode.setName("area");
 		invalidNode.setParentID("root");
 		invalidNode.setLevel(EquipmentLevelEnum.Area);
 		validator.validate(invalidNode, errors);
@@ -152,7 +152,7 @@ public class EquipmentClassValidatorTest {
 		EquipmentClass invalidNode = new EquipmentClass();
 		invalidNode = new EquipmentClass();
 		invalidNode.setDescription("area node");
-		invalidNode.setId("area");
+		invalidNode.setName("area");
 		invalidNode.setParentID("site");
 		invalidNode.setLevel(EquipmentLevelEnum.Area);
 		validator.validate(invalidNode, errors);
