@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.openfab.isa95.equipments.CustomResponseEntityExceptionHandler;
 import com.openfab.isa95.equipments.DataTypeEnum;
 import com.openfab.isa95.equipments.DescriptionTranslations;
 import com.openfab.isa95.equipments.EquipmentClass;
@@ -35,13 +36,11 @@ import com.openfab.isa95.equipments.EquipmentClassValidator;
 import com.openfab.isa95.equipments.EquipmentLevelEnum;
 import com.openfab.isa95.equipments.EquipmentProperty;
 import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
-import com.openfab.isa95.equipments.CustomResponseEntityExceptionHandler;
 import com.openfab.isa95.equipments.Value;
-import com.openfab.isa95.equipments.commons.EmbeddedMongoIntegrationConfig;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({ EquipmentClassController.class, EquipmentClassValidator.class,
-		EmbeddedMongoIntegrationConfig.class, Isa95EquipmentsApplication.class,
+		Isa95EquipmentsApplication.class,
 		CustomResponseEntityExceptionHandler.class })
 public class EquipmentClassRestIntegrationTest {
 
