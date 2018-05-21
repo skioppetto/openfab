@@ -86,7 +86,7 @@ public class EquipmentClassController {
 
 	@PostMapping("/equipment-class")
 	public ResponseEntity<EquipmentClass> createEquipmentClass(
-			@Valid @RequestBody EquipmentClass clz) {
+			@Valid @RequestBody EquipmentClass clz, @RequestParam(required = false) String lang) {
 		EquipmentClass ec = repo.save(clz);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(ec.getName()).toUri();
