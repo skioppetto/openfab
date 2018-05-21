@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.Errors;
 import org.springframework.validation.MapBindingResult;
@@ -24,6 +25,7 @@ import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Isa95EquipmentsApplication.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class EquipmentClassValidatorTest {
 
 	@MockBean
