@@ -5,36 +5,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import com.openfab.isa95.equipments.CommonsController;
-import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({ CommonsController.class,
-		Isa95EquipmentsApplication.class })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CommonsRestIntegrationTest {
 
 	@Autowired
-	private MockMvc mockMvc;
+	private TestRestTemplate mockMvc;
+
+	@LocalServerPort
+	private int port;
 
 	@Test
 	public void testDataTypes() throws Exception {
-		RequestBuilder dataTypes = MockMvcRequestBuilders.get(
-				"/commons/data-type", MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(dataTypes).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/commons/data-type", String.class);
+		Assert.assertNotNull(result);
 		System.out.println("----- dataTypes() result: "
-				+ result.getResponse().getContentAsString());
+				+ result);
 		String expected = "[\"Amount\",\"BinaryObject\",\"Code\",\"DateTime\",\"Identifier\",\"Indicator\",\"Measure\",\"Numeric\",\"Quantity\",\"Text\"]";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), true);
+		JSONAssert.assertEquals(expected, result, true);
 	}
 }

@@ -15,41 +15,43 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.openfab.isa95.equipments.CustomResponseEntityExceptionHandler;
 import com.openfab.isa95.equipments.DataTypeEnum;
 import com.openfab.isa95.equipments.DescriptionTranslations;
 import com.openfab.isa95.equipments.EquipmentClass;
 import com.openfab.isa95.equipments.EquipmentClassController;
 import com.openfab.isa95.equipments.EquipmentClassRepository;
-import com.openfab.isa95.equipments.EquipmentClassValidator;
 import com.openfab.isa95.equipments.EquipmentLevelEnum;
 import com.openfab.isa95.equipments.EquipmentProperty;
-import com.openfab.isa95.equipments.Isa95EquipmentsApplication;
 import com.openfab.isa95.equipments.Value;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({ EquipmentClassController.class, EquipmentClassValidator.class,
-		Isa95EquipmentsApplication.class,
-		CustomResponseEntityExceptionHandler.class })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class EquipmentClassRestIntegrationTest {
 
+	@LocalServerPort
+	private int port;
+
 	@Autowired
-	private MockMvc mockMvc;
+	private TestRestTemplate mockMvc;
 
 	@MockBean
 	private EquipmentClassRepository repo;
 
+	@Autowired
+	private EquipmentClassController controller;
+	
 	@Before
 	public void setUp() {
 		// enterprise node
@@ -119,137 +121,123 @@ public class EquipmentClassRestIntegrationTest {
 		Mockito.when(repo.findSimpleAll()).thenReturn(equipments);
 		Mockito.when(repo.findByName(Mockito.eq("root"))).thenReturn(
 				Optional.of(rootdetailed));
-		Mockito.when(repo.save(Mockito.any(EquipmentClass.class))).thenAnswer(new Answer<EquipmentClass>() {
-		    @Override
-		    public EquipmentClass answer(InvocationOnMock invocation) throws Throwable {
-		      Object[] args = invocation.getArguments();
-		      return (EquipmentClass) args[0];
-		    }
-		  });
+		Mockito.when(repo.save(Mockito.any(EquipmentClass.class))).thenAnswer(
+				new Answer<EquipmentClass>() {
+					@Override
+					public EquipmentClass answer(InvocationOnMock invocation)
+							throws Throwable {
+						Object[] args = invocation.getArguments();
+						return (EquipmentClass) args[0];
+					}
+				});
 		
 	}
 
 	@Test
 	public void testTree() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get("/equipment-class",
-				MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
-		System.out.println("----- testTree() result: "
-				+ result.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class", String.class);
+		System.out.println("----- testTree() result: " + result);
 		String expected = "{\"node\":{\"name\":\"root\",\"description\":\"my enterprise description\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"name\":\"area1\",\"description\":\"my area description\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"name\":\"area2\",\"description\":\"my area description\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), true);
+		JSONAssert.assertEquals(expected, result, true);
 	}
 
 	@Test
 	public void testTreeLanguage() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class?lang=it", MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
-		System.out.println("----- testTree() result: "
-				+ result.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class?lang=it", String.class);
+		System.out.println("----- testTree() result: " + result);
 		String expected = "{\"node\":{\"name\":\"root\",\"description\":\"la mia descrizione\",\"level\":\"Enterprise\"},\"children\":[{\"node\":{\"name\":\"area1\",\"description\":\"la mia descrizione area\",\"parentID\":\"root\",\"level\":\"Area\"}},{\"node\":{\"name\":\"area2\",\"description\":\"la mia descrizione area 2\",\"parentID\":\"root\",\"level\":\"Area\"}}]}";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), true);
+		JSONAssert.assertEquals(expected, result, true);
 	}
 
 	@Test
 	public void testGetDetailedOK() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class/root", MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
-		System.out.println("----- testGetOK() result: "
-				+ result.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class/root", String.class);
+		System.out.println("----- testGetOK() result: " + result);
 		String expected = "{\"name\":\"root\",\"description\":\"my enterprise description\",\"extended\":[{\"key\":\"address\",\"description\":\"enterprise address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), false);
+		JSONAssert.assertEquals(expected, result, false);
 	}
 
 	@Test
 	public void testGetDetailedOKLanguage() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class/root?lang=it", MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
-		System.out.println("----- testGetOKLanguage() result: "
-				+ result.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class/root?lang=it", String.class);
+		System.out.println("----- testGetOKLanguage() result: " + result);
 		String expected = "{\"name\":\"root\",\"description\":\"la mia descrizione\",\"extended\":[{\"key\":\"address\",\"description\":\"indirizzo azienda\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"description\":\"enterprise name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}],\"level\":\"Enterprise\"}";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), false);
+		JSONAssert.assertEquals(expected, result, false);
 	}
 
 	@Test
 	public void testGetTranslationsOK() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class/root/translations",
-				MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
-		System.out.println("----- testGetTranslationsOK() result: "
-				+ result.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class/root/translations", String.class);
+		System.out.println("----- testGetTranslationsOK() result: " + result);
 		String expected = "{\"en\":\"my enterprise description\",\"it\":\"la mia descrizione\"}";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), false);
+		JSONAssert.assertEquals(expected, result, false);
 	}
 
 	@Test
 	public void testGetEquipmentPropertiesOK() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class/root/extended", MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class/root/extended", String.class);
 		System.out.println("----- testGetEquipmentPropertiesOK() result: "
-				+ result.getResponse().getContentAsString());
+				+ result);
 		String expected = "[{\"key\":\"address\",\"value\":{\"type\":\"Text\",\"asString\":\"via gorizia, 12, Napoli\"}},{\"key\":\"name\",\"value\":{\"type\":\"Text\",\"asString\":\"Ablabla s.p.a\"}}]";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), false);
+		JSONAssert.assertEquals(expected, result, false);
 	}
 
 	@Test
 	public void testGetPropertyTranslationsOK() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class/root/extended/address/translations",
-				MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse().getContentAsString(), result
-				.getResponse().getContentAsString());
-		System.out.println("----- testGetTranslationsOK() result: "
-				+ result.getResponse().getContentAsString());
+		String result = mockMvc.getForObject("http://localhost:" + port
+				+ "/equipment-class/root/extended/address/translations",
+				String.class);
+		System.out.println("----- testGetTranslationsOK() result: " + result);
 		String expected = "{\"en\":\"enterprise address\",\"it\":\"indirizzo azienda\"}";
-		JSONAssert.assertEquals(expected, result.getResponse()
-				.getContentAsString(), false);
+		JSONAssert.assertEquals(expected, result, false);
 	}
 
 	@Test
 	public void testPostEquipmentClass() throws Exception {
-		MockHttpServletRequestBuilder getAll = MockMvcRequestBuilders
-				.post("/equipment-class")
-				.content(
-						"{\"name\":\"area4\",\"description\":\"my area4 description\", \"parentID\":\"root\", \"level\":\"Area\"}")
-				.contentType(MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		String url = "http://localhost:" + port + "/equipment-class";
+		HttpEntity<String> request = new HttpEntity<String>(
+				"{\"name\":\"area4\",\"description\":\"my area4 description\", \"parentID\":\"root\", \"level\":\"Area\"}",
+				headers);
+		ResponseEntity<String> result = mockMvc.postForEntity(url, request,
+				String.class, headers);
 		System.out.println("----- testPostEquipmentClass() result: "
-				+ result.getResponse().getContentAsString());
-		Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+				+ result.getBody());
+		Assert.assertEquals(HttpStatus.CREATED, result.getStatusCode());
+
+	}
+
+	@Test
+	public void testPostEquipmentClassInvalid() throws Exception {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		String url = "http://localhost:" + port + "/equipment-class";
+		HttpEntity<String> request = new HttpEntity<String>(
+				"{\"name\":\"area4\",\"description\":\"my area4 description\", \"level\":\"Area\"}",
+				headers);
+		ResponseEntity<String> result = mockMvc.postForEntity(url, request,
+				String.class, headers);
+		System.out.println("----- testPostEquipmentClassInvalid() result: "
+				+ result.getBody());
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
 	}
 
 	@Test
 	public void testGet404() throws Exception {
-		RequestBuilder getAll = MockMvcRequestBuilders.get(
-				"/equipment-class/404", MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(getAll).andReturn();
-		Assert.assertNotNull(result.getResponse());
-		Assert.assertEquals(404, result.getResponse().getStatus());
-		System.out.println(result.getResponse().getContentAsString());
-
+		ResponseEntity<String> result = mockMvc.getForEntity(
+				"http://localhost:" + port + "/equipment-class/404",
+				String.class);
+		System.out.println("----- testGetTranslationsOK() result: "
+				+ result.getBody());
+		Assert.assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 	}
 }
